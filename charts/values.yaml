@@ -2,8 +2,8 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  registry: ""
-  repository: ""
+  registry: "docker.io"
+  repository: "xinnj/k8s-node-watcher"
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""

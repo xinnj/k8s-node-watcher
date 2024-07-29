@@ -7,6 +7,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	taints "k8s.io/kubernetes/pkg/util/taints"
 	"log"
+	"strings"
 )
 
 var nodeTaints = [2]v1.Taint{
@@ -29,7 +30,8 @@ func AddTaints(clientSet *kubernetes.Clientset, node *v1.Node) {
 	}
 
 	if nodeUpdated {
-		if _, err := clientSet.CoreV1().Nodes().Update(context.TODO(), node, metav1.UpdateOptions{}); err != nil {
+		_, err := clientSet.CoreV1().Nodes().Update(context.TODO(), node, metav1.UpdateOptions{})
+		if err != nil && !strings.Contains(err.Error(), "the object has been modified") {
 			log.Printf("Failed to add taints to node %v: %v", node.Name, err)
 		} else {
 			log.Printf("Added taints to node %v", node.Name)
@@ -48,7 +50,8 @@ func RemoveTaints(clientSet *kubernetes.Clientset, node *v1.Node) {
 	}
 
 	if nodeUpdated {
-		if _, err := clientSet.CoreV1().Nodes().Update(context.TODO(), node, metav1.UpdateOptions{}); err != nil {
+		_, err := clientSet.CoreV1().Nodes().Update(context.TODO(), node, metav1.UpdateOptions{})
+		if err != nil && !strings.Contains(err.Error(), "the object has been modified") {
 			log.Printf("Failed to remove taints from node %v: %v", node.Name, err)
 		} else {
 			log.Printf("Removed taints from node %v", node.Name)
