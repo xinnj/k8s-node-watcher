@@ -1,0 +1,17 @@
+{{- if and .Values.rbac.create .Values.rbac.clusterRole }}
+apiVersion: rbac.authorization.k8s.io/{{ .Values.rbac.apiVersion }}
+kind: ClusterRole
+metadata:
+  name: {{ include "k8s-node-watcher.fullname" . }}
+  labels:
+    {{- include "k8s-node-watcher.labels" . | nindent 4 }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+{{- end }}
